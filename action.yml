@@ -1,0 +1,15 @@
+name: 'Bump Nuget Version'
+description: 'This action will add a Nuget source'
+inputs:
+  level:
+    description: 'Version level (patch, minor or major)'     
+    required: true
+    default: 'patch'
+    
+runs:
+  using: 'composite'
+  steps: 
+    - run: sudo npm install -g semver
+      shell: bash
+    - run: export level=${{ inputs.level }}; ${{ github.action_path }}/bump.sh
+      shell: bash
