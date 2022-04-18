@@ -1,0 +1,38 @@
+name: Npm - Lint (GitHub Registry)
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NODE_AUTH_TOKEN: ${{secrets.github-token}}
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v2
+      - name: 🟩 Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://npm.pkg.github.com/
+          scope: '@unosquare'
+      - name: 📦 Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-
+      - name: 🤠 npm install
+        run: npm ci
+      - name: ✔ Lint
+        uses: a-b-r-o-w-n/eslint-action@v2
+        with:
+          repo-token:  ${{ secrets.github-token }}
+          files: 'src/**/*'
