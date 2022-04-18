@@ -5,6 +5,9 @@ on:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
         required: true
+      cache-version:
+        description: 'The Cache version.'
+        required: true
 
 jobs:
   eslint:
@@ -15,20 +18,20 @@ jobs:
 
     steps:
       - name: 🛎 Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: 🟩 Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
           scope: '@unosquare'
       - name: 📦 Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: node-${{ hashFiles('**/package-lock.json') }}
+          key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-
+            node-${{ secrets.cache-version }}-
       - name: 🤠 npm install
         run: npm ci
       - name: ✔ Lint
