@@ -64,8 +64,8 @@ jobs:
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
         with:
-          author_email: geovanni.perez@gmail.com
-          author_name: geo.perez
+          author_email: geoperez@users.noreply.github.com
+          author_name: '@geoperez'
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
       - name: 🌿 Clean up stale packages
