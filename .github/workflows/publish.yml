@@ -62,7 +62,7 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.github-token }}" > ~/.npmrc
           npm publish
       - name: 📌 Commit
-        uses: EndBug/add-and-commit@v7.4.0
+        uses: EndBug/add-and-commit@v9.0.0
         with:
           author_email: geovanni.perez@gmail.com
           author_name: geoperez
