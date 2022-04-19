@@ -13,11 +13,6 @@ on:
         description: 'The name of the project to build. Must match the directory name.'
         required: true
         type: string
-      prerelease-versions-kept:
-        description: 'The number of pre-release versions kept in the GitHub registry.'
-        required: false
-        type: number
-        default: 10
 
 jobs:
   build:
@@ -73,6 +68,4 @@ jobs:
         uses: actions/delete-package-versions@v3
         with: 
           package-name: ${{ inputs.project-name }}
-          min-versions-to-keep: ${{ inputs.prerelease-versions-kept }}
-          delete-only-pre-release-versions: 'true'
       
