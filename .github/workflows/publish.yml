@@ -65,6 +65,8 @@ jobs:
           npm publish
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
+        with:
+          message: '[skip ci] Bump version'
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
       - name: 🌿 Clean up stale packages
