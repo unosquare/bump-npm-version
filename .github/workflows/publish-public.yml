@@ -1,0 +1,41 @@
+name: Npm - Publish Public (GitHub Registry)
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+      npm-token:
+        description: 'The NPM token to perform checkout and publish.'
+        required: true
+      cache-version:
+        description: 'The Cache version.'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v3
+      - name: 📦 Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-${{ secrets.cache-version }}-
+      - name: 🏗 npm build
+        run: |
+          npm ci
+          npm run build
+      - name: 🍱 Publish
+        uses: mikeal/merge-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+          NPM_AUTH_TOKEN: ${{ secrets.npm-token }}
+      
