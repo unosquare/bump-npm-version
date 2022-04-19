@@ -42,11 +42,6 @@ jobs:
           key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-
-      - name: 🤠 Configure CI Git User & npm
-        run: |
-          git config --global user.name '@geoperez'
-          git config --global user.email 'geoperez@users.noreply.github.com'
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.github-token }}" > ~/.npmrc
       - name: 🤠 npm install
         run: npm ci
       - name: 🏗 Build
@@ -68,6 +63,9 @@ jobs:
           npm publish
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v7.4.0
+        with:
+          author_email: geovanni.perez@gmail.com
+          author_name: geoperez
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
       - name: 🌿 Clean up stale packages
