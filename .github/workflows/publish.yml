@@ -24,11 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      NODE_AUTH_TOKEN: ${{secrets.github-token}}
+      NODE_AUTH_TOKEN: ${{ secrets.github-token }}
     
     steps:
       - name: 🛎 Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.github-token }}
       - name: 🟩 Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -41,7 +43,7 @@ jobs:
           path: ~/.npm
           key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-
+            node-${{ secrets.cache-version }}-
       - name: 🤠 npm install
         run: npm ci
       - name: 🏗 Build
@@ -63,9 +65,6 @@ jobs:
           npm publish
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
-        with:
-          author_email: geoperez@users.noreply.github.com
-          author_name: geoperez
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
       - name: 🌿 Clean up stale packages
