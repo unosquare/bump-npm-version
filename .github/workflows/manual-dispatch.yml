@@ -1,0 +1,52 @@
+name: Update webparts
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+      cache-version:
+        description: 'The Cache version.'
+        required: true
+
+jobs:
+  npmcheck:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NODE_AUTH_TOKEN: ${{ secrets.github-token }}
+
+    steps:
+    - name: 🛎 Checkout
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.github-token }}
+    - name: ✅ Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14
+        registry-url: https://npm.pkg.github.com/
+        scope: '@unosquare'
+    - name: 📦 Cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          node-${{ secrets.cache-version }}-
+    - name: 🟩 Set up npm rc
+      run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GPR_ACCESS_TOKEN }}" > ~/.npmrc
+    - name: 🎈 Upgrade
+      run: npx npm-check-updates
+    - name: 📈 Validate diff
+      run: |
+        ! git diff --exit-code
+    - name: 🎠 Install and Build
+      run: |
+        npm install
+        npm run build
+    - name: 📌 Commit
+      uses: EndBug/add-and-commit@v9
+      env:
+        GITHUB_TOKEN: ${{ secrets.github-token }}
