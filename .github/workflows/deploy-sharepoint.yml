@@ -38,18 +38,17 @@ jobs:
           key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-${{ secrets.cache-version }}-
-      - name: 🤠 npm install
+      - name: 🤠 Install
         run: npm ci
-      - name: 🏗 Build
-        run: npm run build
       - name: Setup staging vars (optional)
         if: github.ref == 'refs/heads/dev'
         run: node staging.js
-      - name: npm build
+      - name: 🏗 Build
         run: npm run build    
-      - name: npm deploy
+      - name: 🌯 Package
         run: npm run deploy-sharepoint
-      - uses: actions/upload-artifact@v2
+      - name: ☁️ Upload
+        uses: actions/upload-artifact@v2
         with:
           name: sharepoint
           path: sharepoint/solution/${{ inputs.project-name }}.sppkg
