@@ -55,9 +55,9 @@ jobs:
         with:
           level: ${{ steps.level.outputs.value }}
       - name: 🍱 Publish
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.github-token }}" > ~/.npmrc
-          npm publish
+        uses: unosquare/publish-npm-package@master
+        with:
+          access-token: ${{ secrets.github-token }}
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
         with:
