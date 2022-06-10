@@ -35,7 +35,8 @@ jobs:
       - name: 🤠 npm install
         run: npm ci
       - name: ✔ Lint
-        uses: a-b-r-o-w-n/eslint-action@v2
+        uses: sibiraj-s/action-eslint@v2
         with:
-          repo-token:  ${{ secrets.github-token }}
-          files: 'src/**/*'
+          github-token: ${{ secrets.github-token }}
+          extensions: 'js,jsx,ts,tsx'
+          annotations: true
