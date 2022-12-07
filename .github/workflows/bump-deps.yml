@@ -1,0 +1,36 @@
+name: Npm - Public Bump Deps
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+      npm-token:
+        description: 'The NPM token to perform checkout and publish.'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.github-token }}
+      - name: 🤠 npm install updates
+        run: |
+          npx ncu
+          npm install
+      - name: 🏗 Build & Test
+        run: |
+          npm run build
+          npm test
+      - name: 🍱 Publish
+        uses: mikeal/merge-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+          NPM_AUTH_TOKEN: ${{ secrets.npm-token }}
+      
