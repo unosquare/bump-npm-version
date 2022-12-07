@@ -31,9 +31,8 @@ jobs:
         run: |
           npm run build
           npm test
-      - name: 🍱 Publish
-        uses: mikeal/merge-release@master
+      - name: 📌 Commit
+        uses: EndBug/add-and-commit@v9
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
-          NPM_AUTH_TOKEN: ${{ secrets.npm-token }}
       
