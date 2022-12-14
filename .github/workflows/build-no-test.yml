@@ -1,10 +1,7 @@
-name: Npm - Build no testing
+name: Npm - Build no testing Public
 on:
   workflow_call:
     secrets:
-      github-token:
-        description: 'The GitHub PAT token to perform checkout and publish.'
-        required: true
       cache-version:
         description: 'The Cache version.'
         required: true
@@ -14,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      NODE_AUTH_TOKEN: ${{secrets.github-token}}
     
     steps:
       - name: 🛎 Checkout
