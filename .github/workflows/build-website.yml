@@ -10,7 +10,7 @@ on:
         required: true
 
 jobs:
-  dpdm:
+  build:
     runs-on: ubuntu-latest
     env:
       CI: true
