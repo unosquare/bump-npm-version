@@ -2,6 +2,15 @@ name: Clean PR Cache
 
 on:
   workflow_call:
+    inputs:
+      repo-name:
+        description: 'The name of the repo.'
+        required: true
+        type: string
+      branch:
+        description: 'The name of the branch.'
+        required: true
+        type: string
     secrets:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
@@ -17,8 +26,8 @@ jobs:
         run: |
           gh extension install actions/gh-actions-cache
           
-          REPO=$
-          BRANCH=$
+          REPO=${{ inputs.repo-name }}
+          BRANCH=${{ inputs.branch }}
 
           echo "Fetching list of cache key"
           cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1 )
@@ -32,4 +41,4 @@ jobs:
           done
           echo "Done"
         env:
-          GH_TOKEN: $
+          GH_TOKEN: ${{secrets.github-token}}
