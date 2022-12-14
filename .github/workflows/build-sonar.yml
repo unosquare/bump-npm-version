@@ -1,0 +1,43 @@
+name: Lib - Build, Test and Report Sonar
+
+on: 
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+      cache-version:
+        description: 'The Cache version.'
+        required: true
+      sonar-token:
+        description: 'The Sonar Token.'
+        required: true
+         
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: 📦 Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-${{ secrets.cache-version }}-
+      - name: 🏗 npm build and coverage
+        run: |
+          npm ci
+          npm run build
+          npm run cest
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
