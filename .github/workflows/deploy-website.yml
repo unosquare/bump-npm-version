@@ -1,0 +1,41 @@
+name: Publish to GH Pages
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+      cache-version:
+        description: 'The Cache version.'
+        required: true
+
+jobs:
+  deploy:
+    runs-on:
+      group: linux-runners
+    env:
+      CI: true
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: 📦 Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-${{ secrets.cache-version }}-
+      - name: 🤠 npm install
+        run: npm ci
+      - name: 🏭 npm build
+        run: npm run build
+      - name: 🐜 Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+            GITHUB_TOKEN: ${{ secrets.github-token }}
+            BRANCH: gh-pages
+            FOLDER: build
