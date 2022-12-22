@@ -32,7 +32,7 @@ jobs:
         run: npm ci
       - name: 🚑 npm sanity check & lint
         run: |
-          npm run imports:fix
+          npm run imports:fix --if-present
           npm run lint
       - name: 🏗 Build
         run: npm run build
