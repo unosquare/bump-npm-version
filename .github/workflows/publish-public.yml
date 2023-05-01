@@ -47,7 +47,9 @@ jobs:
         with:
           level: ${{ steps.level.outputs.value }}
       - name: 🍱 Publish
-        run: npm publish
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm-token }}" > ~/.npmrc 
+          npm publish
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
         with:
