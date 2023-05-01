@@ -33,9 +33,25 @@ jobs:
         run: |
           npm ci
           npm run build
+      - name: 👌 Bump level
+        uses: haya14busa/action-cond@v1
+        id: level
+        with:
+          cond: ${{ github.ref == 'refs/heads/dev' }}
+          if_true: "patch"
+          if_false: "minor"
+      - name: 🐝 Bump version
+        uses: unosquare/bump-npm-version@master
+        with:
+          level: ${{ steps.level.outputs.value }}
       - name: 🍱 Publish
-        uses: mikeal/merge-release@master
+        uses: unosquare/publish-npm-package@master
+        with:
+          access-token: ${{ secrets.npm-token }}
+      - name: 📌 Commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: '[skip ci] Bump version'
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
-          NPM_AUTH_TOKEN: ${{ secrets.npm-token }}
       
