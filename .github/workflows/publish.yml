@@ -8,11 +8,6 @@ on:
       cache-version:
         description: 'The Cache version.'
         required: true
-    inputs:
-      project-name:
-        description: 'The name of the project to build. Must match the directory name.'
-        required: true
-        type: string
 
 jobs:
   build:
