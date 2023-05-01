@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
+      NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
     
     steps:
       - name: 🛎 Checkout
@@ -29,6 +30,7 @@ jobs:
           key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-${{ secrets.cache-version }}-
+            node-
       - name: 🏗 npm build
         run: |
           npm ci
@@ -45,9 +47,7 @@ jobs:
         with:
           level: ${{ steps.level.outputs.value }}
       - name: 🍱 Publish
-        uses: unosquare/publish-npm-package@master
-        with:
-          access-token: ${{ secrets.npm-token }}
+        run: npm publish
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
         with:
