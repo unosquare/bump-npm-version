@@ -1,12 +1,10 @@
 name: Npm - Build Website
+
 on:
   workflow_call:
     secrets:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
-        required: true
-      cache-version:
-        description: 'The Cache version.'
         required: true
 
 jobs:
