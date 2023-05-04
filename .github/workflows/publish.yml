@@ -40,10 +40,12 @@ jobs:
         uses: unosquare/bump-npm-version@master
         with:
           level: ${{ steps.level.outputs.value }}
-      - name: 🍱 Publish
-        uses: unosquare/publish-npm-package@master
-        with:
-          access-token: ${{ secrets.github-token }}
+      - name: 🤡 Publish
+        run: |
+          rm ./dist/package.json
+          mv ./dist/src/* ./dist/
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.github-token }}" > ~/.npmrc
+          npm publish
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
         with:
