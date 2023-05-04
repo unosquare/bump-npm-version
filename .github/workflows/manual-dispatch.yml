@@ -6,9 +6,6 @@ on:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
         required: true
-      cache-version:
-        description: 'The Cache version.'
-        required: true
 
 jobs:
   npmcheck:
@@ -28,13 +25,7 @@ jobs:
         node-version: 14
         registry-url: https://npm.pkg.github.com/
         scope: '@unosquare'
-    - name: 📦 Cache
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          node-${{ secrets.cache-version }}-
+        cache: 'npm'
     - name: 🟩 Set up npm rc
       run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GPR_ACCESS_TOKEN }}" > ~/.npmrc
     - name: 🎈 Upgrade
