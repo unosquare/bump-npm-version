@@ -9,9 +9,6 @@ on:
       npm-token:
         description: 'The NPM token to perform checkout and publish.'
         required: true
-      cache-version:
-        description: 'The Cache version.'
-        required: true
 
 jobs:
   build:
@@ -23,14 +20,10 @@ jobs:
     steps:
       - name: 🛎 Checkout
         uses: actions/checkout@v3
-      - name: 📦 Cache
-        uses: actions/cache@v3
+      - uses: actions/setup-node@v3
         with:
-          path: ~/.npm
-          key: node-${{ secrets.cache-version }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            node-${{ secrets.cache-version }}-
-            node-
+          node-version: 18
+          cache: 'npm'
       - name: 🏗 npm build
         run: |
           npm ci
