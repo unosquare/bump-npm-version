@@ -1,12 +1,10 @@
 name: Npm - Public Bump Deps
+
 on:
   workflow_call:
     secrets:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
-        required: true
-      npm-token:
-        description: 'The NPM token to perform checkout and publish.'
         required: true
 
 jobs:
