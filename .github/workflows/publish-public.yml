@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: 🛎 Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.github-token }}
       - uses: actions/setup-node@v3
         with:
           node-version: 18
