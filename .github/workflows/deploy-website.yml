@@ -18,15 +18,28 @@ jobs:
       - name: 🛎 Checkout
         uses: actions/checkout@v3
         with:
-          persist-credentials: false
-      - uses: actions/setup-node@v3
+          persist-credentials: false      
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
         with:
-          node-version: 18
-          cache: 'npm'
-      - name: 🤠 npm install
-        run: npm ci
+          run_install: false
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - name: 🤠 Install
+        run: pnpm install
       - name: 🏭 npm build
-        run: npm run build
+        run: pnpm build
       - name: 🐜 Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
