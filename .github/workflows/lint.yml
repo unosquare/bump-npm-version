@@ -27,7 +27,7 @@ jobs:
       - name: 🤠 npm install
         run: npm ci
       - name: ✔ Lint
-        uses: sibiraj-s/action-eslint@v2
+        uses: sibiraj-s/action-eslint@v3
         with:
           extensions: 'js,jsx,ts,tsx'
           annotations: true
