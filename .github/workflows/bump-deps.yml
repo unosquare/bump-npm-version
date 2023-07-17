@@ -23,12 +23,30 @@ jobs:
       - name: 📈 Validate diff
         run: |
           ! git diff --exit-code
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 8.6.7
+          run_install: false
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
       - name: 🎠 Install
-        run: npm install
+        run: pnpm install
       - name: 🏗 Build & Test
         run: |
-          npm run build
-          npm test
+          pnpm build
+          pnpm test
       - name: 📌 Commit
         uses: EndBug/add-and-commit@v9
         env:
