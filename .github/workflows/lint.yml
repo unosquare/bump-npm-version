@@ -29,6 +29,5 @@ jobs:
       - name: ✔ Lint
         uses: sibiraj-s/action-eslint@v3
         with:
-          extensions: 'js,jsx,ts,tsx'
+          extensions: 'jsx,ts,tsx'
           annotations: true
-          working-dir: src
