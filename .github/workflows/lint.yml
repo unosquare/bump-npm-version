@@ -31,3 +31,4 @@ jobs:
         with:
           extensions: 'js,jsx,ts,tsx'
           annotations: true
+          working-dir: src
