@@ -40,10 +40,10 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-      - name: 🏗 npm build
-        run: |
-          pnpm install
-          pnpm build
+      - name: 🤡 pnpm install
+        run: pnpm install
+      - name: 🏗 Build
+        run: pnpm build
       - name: 👌 Bump level
         uses: haya14busa/action-cond@v1
         id: level
