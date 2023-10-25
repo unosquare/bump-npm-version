@@ -6,6 +6,9 @@ on:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
         required: true
+      cf-token:
+        description: 'The CloudFlare token to clean cache.'
+        required: true
 
 jobs:
   deploy:
@@ -47,3 +50,11 @@ jobs:
             token: ${{ secrets.github-token }}
             branch: gh-pages
             folder: build
+      - name: 🤡 Kill CloudFlare
+        run: |
+          curl -X DELETE "https://api.cloudflare.com/client/v4/zones/b1858ec7f1c3fdc7b706750969250757/purge_cache" \
+              -H "X-Auth-Email:  it@unosquare.com" \
+              -H "X-Auth-Key: ${{ secrets.cf-token }}" \
+              -H "Content-Type: application/json" \
+              --data "{\"purge_everything\":true}" \
+              -k
