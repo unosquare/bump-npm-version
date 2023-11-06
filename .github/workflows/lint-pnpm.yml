@@ -41,8 +41,4 @@ jobs:
         continue-on-error: true
         run: |
           pnpm install
-      - name: ✔ Lint
-        uses: sibiraj-s/action-eslint@v3
-        with:
-          extensions: 'jsx,ts,tsx'
-          annotations: true
+          pnpm lint
