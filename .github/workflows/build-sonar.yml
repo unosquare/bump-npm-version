@@ -40,7 +40,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
       - name: 🏗 npm build and coverage
-        continue-on-error: true
         run: |
           pnpm install
           pnpm build
