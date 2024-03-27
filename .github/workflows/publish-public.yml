@@ -44,17 +44,8 @@ jobs:
         run: pnpm install
       - name: 🏗 Build
         run: pnpm build
-      - name: 👌 Bump level
-        uses: haya14busa/action-cond@v1
-        id: level
-        with:
-          cond: ${{ github.ref == 'refs/heads/dev' }}
-          if_true: "patch"
-          if_false: "minor"
       - name: 🐝 Bump version
-        uses: unosquare/bump-npm-version@master
-        with:
-          level: ${{ steps.level.outputs.value }}
+        run: npm version --no-git-tag-version ${{ github.ref == 'refs/heads/dev' && 'patch' || 'minor' }}
       - name: 🍱 Publish
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.npm-token }}" > ~/.npmrc 
