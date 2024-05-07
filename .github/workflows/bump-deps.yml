@@ -23,7 +23,7 @@ jobs:
       - name: 📈 Validate diff
         run: |
           ! git diff --exit-code
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
