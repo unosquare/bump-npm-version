@@ -2,6 +2,12 @@ name: Npm - Lint (GitHub Registry)
 
 on:
   workflow_call:
+    inputs:
+      node-version:
+        description: 'The version of Node.js to use'
+        required: false
+        default: '14'
+        type: 'string'
     secrets:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
@@ -20,7 +26,7 @@ jobs:
       - name: 🟩 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: ${{ inputs.node-version }}
           registry-url: https://npm.pkg.github.com/
           scope: '@unosquare'
           cache: 'npm'
