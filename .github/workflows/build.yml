@@ -1,6 +1,13 @@
 name: Npm - Build, Bump and Push (GitHub Registry)
+
 on:
   workflow_call:
+    inputs:
+      node-version:
+        description: 'The version of Node.js to use'
+        required: false
+        default: '14'
+        type: 'string'
     secrets:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
@@ -11,25 +18,31 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      NODE_AUTH_TOKEN: ${{secrets.github-token}}
-    
+      NODE_AUTH_TOKEN: ${{ secrets.github-token }}
+
     steps:
       - name: 🛎 Checkout
         uses: actions/checkout@v4
+
       - name: 🟩 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: ${{ inputs.node-version }}
           registry-url: https://npm.pkg.github.com/
           scope: '@unosquare'
           cache: 'npm'
+
       - name: 🤠 npm install
         run: npm ci
+
       - name: 💅 Prettier
         run: npm run prettier
+
       - name: ⭕ Circular ref check
         run: npm run dpdm
+
       - name: 🎠 Test
         run: npm test
+
       - name: 🏗 Build
         run: npm run build
