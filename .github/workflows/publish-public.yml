@@ -9,6 +9,12 @@ on:
       npm-token:
         description: 'The NPM token to perform checkout and publish.'
         required: true
+    inputs:
+      node-version:
+        description: 'The version of Node.js to use'
+        required: false
+        default: '14'
+        type: 'string'
 
 jobs:
   build:
@@ -22,6 +28,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.github-token }}
+      - name: 🟩 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          registry-url: https://npm.pkg.github.com/
+          scope: '@unosquare'
+          cache: 'npm'
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
