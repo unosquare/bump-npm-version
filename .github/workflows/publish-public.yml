@@ -32,8 +32,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-          registry-url: https://npm.pkg.github.com/
-          scope: '@unosquare'
           cache: 'npm'
       - uses: pnpm/action-setup@v4
         name: Install pnpm
