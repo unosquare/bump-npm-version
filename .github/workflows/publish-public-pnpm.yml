@@ -1,0 +1,59 @@
+name: Npm - Publish Public PNPM (GitHub Registry)
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+      npm-token:
+        description: 'The NPM token to perform checkout and publish.'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
+    
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.github-token }}
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: latest
+          run_install: false
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - name: 🤡 pnpm install
+        run: pnpm install
+      - name: 🏗 Build
+        run: pnpm build
+      - name: 🐝 Bump version
+        run: npm version --no-git-tag-version patch
+      - name: 🍱 Publish
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm-token }}" > ~/.npmrc 
+          pnpm publish --no-git-checks
+      - name: 📌 Commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: '[skip ci] Bump version'
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+      
