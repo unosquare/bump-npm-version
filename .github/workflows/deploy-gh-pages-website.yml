@@ -26,6 +26,7 @@ jobs:
       group: linux-runners
     env:
       CI: true
+      NODE_ENV: ${{ inputs.build-env }}
 
     steps:
       - name: 🛎 Checkout
@@ -53,12 +54,7 @@ jobs:
       - name: 🤠 Install
         run: pnpm install
       - name: 🏭 npm build
-        run: |
-          if [ "${{ inputs.build-env }}" = "production" ]; then
-            pnpm build
-          else
-            pnpm build:dev
-          fi
+        run: pnpm build
       - name: 🐜 Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
