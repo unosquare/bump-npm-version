@@ -1,0 +1,76 @@
+name: Publish to GH Pages
+
+on:
+  workflow_call:
+    inputs:
+      unosquare-repository-name:
+        description: 'The name of the repository to deploy'
+        required: true
+        type: 'string'
+      build-env:
+        description: 'The env to use while building'
+        required: false
+        default: 'production'
+        type: 'string'
+    secrets:
+      github-token:
+        description: 'The GitHub PAT token to perform checkout and publish.'
+        required: true
+      cf-token:
+        description: 'The CloudFlare token to clean cache.'
+        required: true
+
+jobs:
+  deploy:
+    runs-on:
+      group: linux-runners
+    env:
+      CI: true
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false      
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: latest
+          run_install: false
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - name: 🤠 Install
+        run: pnpm install
+      - name: 🏭 npm build
+        run: |
+          if [ "${{ inputs.build-env }}" = "production" ]; then
+            pnpm build
+          else
+            pnpm build:dev
+          fi
+      - name: 🐜 Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+            token: ${{ secrets.github-token }}
+            branch: gh-pages
+            folder: build
+            repository-name: ${{ inputs.unosquare-repository-name }}
+      - name: 🤡 Kill CloudFlare
+        run: |
+          curl -X DELETE "https://api.cloudflare.com/client/v4/zones/b1858ec7f1c3fdc7b706750969250757/purge_cache" \
+              -H "X-Auth-Email:  it@unosquare.com" \
+              -H "X-Auth-Key: ${{ secrets.cf-token }}" \
+              -H "Content-Type: application/json" \
+              --data "{\"purge_everything\":true}" \
+              -k
