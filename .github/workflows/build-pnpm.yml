@@ -1,4 +1,4 @@
-name: Lib - Build, Test and Report Sonar
+name: Lib - Build & Test
 
 on: workflow_call
          
