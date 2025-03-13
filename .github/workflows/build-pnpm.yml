@@ -1,14 +1,6 @@
 name: Lib - Build, Test and Report Sonar
 
-on: 
-  workflow_call:
-    secrets:
-      github-token:
-        description: 'The GitHub PAT token to perform checkout and publish.'
-        required: true
-      sonar-token:
-        description: 'The Sonar Token.'
-        required: true
+on: workflow_call
          
 jobs:
   build:
@@ -19,8 +11,6 @@ jobs:
     steps:
       - name: 🛎 Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
@@ -44,8 +34,3 @@ jobs:
           pnpm install
           pnpm build
           pnpm cest
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.github-token }}
-          SONAR_TOKEN: ${{ secrets.sonar-token }}
