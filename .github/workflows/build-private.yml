@@ -38,7 +38,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
       - name: Configure pnpm registry
-        run: pnpm config set registry https://npm.pkg.github.com/
+        run: |
+            pnpm config set @unosquare:registry=https://npm.pkg.github.com
+            pnpm config set -- "//npm.pkg.github.com/:_authToken" "${{ secrets.github-token }}"
       - name: 🤠 Install
         run: pnpm install
       - name: 🚑 Lint
