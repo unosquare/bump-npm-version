@@ -2,6 +2,12 @@ name: Publish to GH Pages
 
 on:
   workflow_call:
+    inputs:
+      branch-name:
+        description: 'The name of the branch.'
+        required: true
+        type: string
+        default: 'gh-pages'
     secrets:
       github-token:
         description: 'The GitHub PAT token to perform checkout and publish.'
@@ -52,7 +58,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
             token: ${{ secrets.github-token }}
-            branch: gh-pages
+            branch: ${{ inputs.branch-name }}
             folder: build
       - name: 🤡 Kill CloudFlare
         run: |
