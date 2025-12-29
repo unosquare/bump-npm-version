@@ -34,6 +34,9 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - name: 🤠 Install
         run: pnpm install
+      - name: 🔍 Check unused files (Knip)
+        if: hashFiles('knip.json') != ''
+        run: pnpm knip
       - name: 🚑 Lint
         run: pnpm lint
       - name: 🏗 Build
