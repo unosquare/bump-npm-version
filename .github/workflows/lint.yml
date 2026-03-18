@@ -22,9 +22,9 @@ jobs:
 
     steps:
       - name: 🛎 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: 🟩 Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
           registry-url: https://npm.pkg.github.com/
@@ -33,7 +33,7 @@ jobs:
       - name: 🤠 npm install
         run: npm ci
       - name: ✔ Lint
-        uses: sibiraj-s/action-eslint@v3
+        uses: sibiraj-s/action-eslint@v4
         with:
           extensions: 'jsx,ts,tsx'
           annotations: true
