@@ -42,7 +42,7 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.github-token }}" > ~/.npmrc
           npm publish
       - name: 📌 Commit
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           message: '[skip ci] Bump version'
         env:
